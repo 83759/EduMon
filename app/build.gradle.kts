@@ -146,6 +146,8 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.database.ktx)
+    //implementation("org.json:json:20231013")
+
 
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
@@ -168,6 +170,7 @@ dependencies {
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.mockito.inline)
     testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
 
     // WorkManager test utilities
     testImplementation(libs.androidx.work.testing)
@@ -186,6 +189,8 @@ dependencies {
     androidTestImplementation(libs.compose.test.junit)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation("com.google.guava:guava:31.1-android")
 
 
     // Navigation testing in both test types
@@ -194,10 +199,18 @@ dependencies {
 }
 
 tasks.withType<Test> {
-    // Jacoco for unit tests
+    // Jacoco for unit tests (avoid instrumenting JDK classes on Java 21+)
     configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
+        isIncludeNoLocationClasses = false // was true; this caused JaCoCo to try to instrument JDK classes
+        excludes = listOf(
+            "jdk.*",
+            "java.*",
+            "javax.*",
+            "sun.*",
+            "com.sun.*",
+            "org.jacoco.*",
+            "kotlin.*"
+        )
     }
 }
 
