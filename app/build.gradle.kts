@@ -201,16 +201,8 @@ dependencies {
 tasks.withType<Test> {
     // Jacoco for unit tests (avoid instrumenting JDK classes on Java 21+)
     configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = false // was true; this caused JaCoCo to try to instrument JDK classes
-        excludes = listOf(
-            "jdk.*",
-            "java.*",
-            "javax.*",
-            "sun.*",
-            "com.sun.*",
-            "org.jacoco.*",
-            "kotlin.*"
-        )
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
     }
 }
 
